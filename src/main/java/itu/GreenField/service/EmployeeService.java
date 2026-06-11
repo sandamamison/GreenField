@@ -4,9 +4,8 @@ import itu.GreenField.model.EmployeeModel;
 import itu.GreenField.model.Role;
 import itu.GreenField.repository.EmployeeRepository;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
