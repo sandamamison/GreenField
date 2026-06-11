@@ -3,12 +3,12 @@ package itu.GreenField.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "PointDeVente")
+@Table(name = "pointdevente")
 public class PointDeVente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, length = 100)
     private String nom;
@@ -19,11 +19,11 @@ public class PointDeVente {
     @Column(nullable = false, length = 50)
     private String contact;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
