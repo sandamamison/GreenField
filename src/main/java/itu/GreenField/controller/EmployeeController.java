@@ -1,15 +1,12 @@
 package itu.GreenField.controller;
 
 import itu.GreenField.model.EmployeeModel;
-import itu.GreenField.model.Role;
 import itu.GreenField.service.EmployeeService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employees")
