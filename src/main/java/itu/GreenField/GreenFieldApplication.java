@@ -1,4 +1,4 @@
-package ITU.GreenField;
+package itu.GreenField;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
