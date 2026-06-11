@@ -2,10 +2,12 @@ package itu.GreenField.controller;
 
 import itu.GreenField.model.EmployeeModel;
 import itu.GreenField.model.Role;
-import itu.GreenField.repository.EmployeeRepository;
+import itu.GreenField.service.EmployeeService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +16,10 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class EmployeeController {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     // =========================
@@ -26,12 +28,11 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeModel> createEmployee(@RequestBody EmployeeModel employee) {
 
-        if (employeeRepository.existsByMail(employee.getMail())) {
+        if (!employeeService.createEmployee(employee)) {
             return ResponseEntity.badRequest().build();
         }
 
-        EmployeeModel saved = employeeRepository.save(employee);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(employee);
     }
 
     // =========================
@@ -39,7 +40,7 @@ public class EmployeeController {
     // =========================
     @GetMapping
     public List<EmployeeModel> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeService.getAllEmployees();
     }
 
     // =========================
@@ -47,43 +48,7 @@ public class EmployeeController {
     // =========================
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeModel> getEmployeeById(@PathVariable Integer id) {
-        Optional<EmployeeModel> employee = employeeRepository.findById(id);
-        return employee.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        EmployeeModel employee = employeeService.getEmployeeById(id);
+        return employee != null ? ResponseEntity.ok(employee) : ResponseEntity.notFound().build();
     }
-
-    // =========================
-    // GET BY EMAIL
-    // =========================
-    @GetMapping("/email/{mail}")
-    public ResponseEntity<EmployeeModel> getByMail(@PathVariable String mail) {
-        return employeeRepository.findByMail(mail)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // =========================
-    // GET BY ROLE
-    // =========================
-    @GetMapping("/role/{role}")
-    public List<EmployeeModel> getByRole(@PathVariable Role role) {
-        return employeeRepository.findByRole(role);
-    }
-
-    // =========================
-    // GET ACTIVE EMPLOYEES
-    // =========================
-    @GetMapping("/active")
-    public List<EmployeeModel> getActiveEmployees() {
-        return employeeRepository.findByEstActifTrue();
-    }
-
-    // =========================
-    // GET BY POINT DE VENTE
-    // =========================
-    @GetMapping("/pointdevente/{id}")
-    public List<EmployeeModel> getByPointDeVente(@PathVariable Integer id) {
-        return employeeRepository.findByPointDeVenteId(id);
-    }
-
 }
