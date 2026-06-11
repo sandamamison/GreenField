@@ -48,4 +48,26 @@ public class EmployeeController {
         EmployeeModel employee = employeeService.getEmployeeById(id);
         return employee != null ? ResponseEntity.ok(employee) : ResponseEntity.notFound().build();
     }
+
+    // =========================
+    // UPDATE BY ID
+    // =========================
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeModel> updateEmployee(@PathVariable Integer id, @RequestBody EmployeeModel employee) {
+        if (employeeService.updateEmployee(id, employee)) {
+            return ResponseEntity.ok(employee);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // =========================
+    // DELETE BY ID
+    // =========================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Integer id) {
+        if (employeeService.deleteEmployee(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

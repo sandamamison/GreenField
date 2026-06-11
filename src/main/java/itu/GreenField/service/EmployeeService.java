@@ -4,7 +4,6 @@ import itu.GreenField.model.EmployeeModel;
 import itu.GreenField.model.Role;
 import itu.GreenField.repository.EmployeeRepository;
 
-
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -50,5 +49,22 @@ public class EmployeeService {
 
     public List<EmployeeModel> getByPointDeVente(Integer id) {
         return employeeRepository.findByPointDeVenteId(id);
+    }
+
+    public boolean updateEmployee(Integer id, EmployeeModel employee) {
+        if (!employeeRepository.existsById(id)) {
+            return false;
+        }
+        employee.setId(id);
+        employeeRepository.save(employee);
+        return true;
+    }
+
+    public boolean deleteEmployee(Integer id) {
+        if (!employeeRepository.existsById(id)) {
+            return false;
+        }
+        employeeRepository.deleteById(id);
+        return true;
     }
 }
