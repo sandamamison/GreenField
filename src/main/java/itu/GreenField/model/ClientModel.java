@@ -2,10 +2,11 @@ package itu.GreenField.model;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "employes")
-public class EmployeeModel {
+@Table(name = "client")
+public class ClientModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,18 +31,8 @@ public class EmployeeModel {
     @Column(nullable = false, length = 255)
     private String motdepasse;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "idptdevente", foreignKey = @ForeignKey(name = "fk_employe_pointdevente"))
-    private PointDeVenteModel pointDeVente;
-
-    @Column(name = "est_actif")
-    private Boolean estActif = true;
-
-    // Getters & Setters
+    @Column(name = "soldefidelite")
+    private BigDecimal soldeFidelite = BigDecimal.ZERO;
 
     public Integer getId() {
         return id;
@@ -99,27 +90,11 @@ public class EmployeeModel {
         this.motdepasse = motdepasse;
     }
 
-    public Role getRole() {
-        return role;
+    public BigDecimal getSoldeFidelite() {
+        return soldeFidelite;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public PointDeVenteModel getPointDeVente() {
-        return pointDeVente;
-    }
-
-    public void setPointDeVente(PointDeVenteModel pointDeVente) {
-        this.pointDeVente = pointDeVente;
-    }
-
-    public Boolean getEstActif() {
-        return estActif;
-    }
-
-    public void setEstActif(Boolean estActif) {
-        this.estActif = estActif;
+    public void setSoldeFidelite(BigDecimal soldeFidelite) {
+        this.soldeFidelite = soldeFidelite;
     }
 }
