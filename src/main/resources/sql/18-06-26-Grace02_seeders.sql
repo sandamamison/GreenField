@@ -15,7 +15,7 @@ INSERT INTO Produit (nom, matricule, pu, categorie) VALUES
 ('Tomate', 'PLTP-002', 2950.00, 'Plante potagere'),
 ('Basilic', 'PLTP-003', 2950.00, 'Plante potagere'),
 ('Menthe', 'PLTP-004', 2950.00, 'Plante potagere'),
-('Persil', 'PLTP-005', 2950.00, 'Plante potagere');
+('Persil', 'PLTP-005', 2950.00, 'Plante potagere'),
 ('Rose', 'PLTF-001', 15000.00, 'Plante fleurie'),
 ('Tulipe', 'PLTF-002', 35000.00, 'Plante fleurie'),
 ('Lys', 'PLTF-003', 25000.00, 'Plante fleurie'),
@@ -23,62 +23,62 @@ INSERT INTO Produit (nom, matricule, pu, categorie) VALUES
 ('Géranium', 'PLTF-005', 18000.00, 'Plante fleurie');
 
 
-INSERT INTO PointDeVente (nom, reference, adresse) VALUES
-('Boutique Centrale', 'CTR-001', '123 Rue Principale, Antananarivo'),
-('Kiosque Nord', 'BTQ-001', 'Avenue du Nord, Antananarivo'),
-('Kiosque Sud', 'BTQ-002', 'Avenue du Sud, Antananarivo'),
-('Kiosque Est', 'BTQ-003', 'Avenue de l\'Est, Antananarivo'),
-('Kiosque Ouest', 'BTQ-004', 'Avenue de l\'Ouest, Antananarivo');
+INSERT INTO pointdevente (nom, reference, adresse, contact) VALUES
+('Centrale', 'CTR-001', 'IAH 23I Vontovorona', '034 12 345 67'),
+('Kiosque Nord', 'BTQ-001', 'Avenue du Nord, Antananarivo', '034 12 345 68'),
+('Kiosque Sud', 'BTQ-002', 'Avenue du Sud, Antananarivo', '034 12 345 69'),
+('Kiosque Est', 'BTQ-003', 'Avenue Est, Antananarivo', '034 12 345 70'),
+('Kiosque Ouest', 'BTQ-004', 'Avenue Ouest, Antananarivo', '034 12 345 71');
 
 /* Données de production du central */
-INSERT INTO MvtStock (type_mouvement, idproduit, idptdevente, quantite) VALUES
-('Entree_Production', 1, NULL, 1000), -- Compost (1kg) à l'unité centrale
-('Entree_Production', 2, NULL, 1000),  -- Compost (5kg) à l'unité centrale
-('Entree_Production', 3, NULL, 1000),  -- Compost (10kg) à l'unité centrale
-('Entree_Production', 4, NULL, 1000),  -- Compost (50kg) à l'unité centrale
-('Entree_Production', 5, NULL, 1000), -- Terre melangée à l'unité centrale
-('Entree_Production', 6, NULL, 1500), -- Pin à l'unité centrale
-('Entree_Production', 7, NULL, 1500), -- Ficus à l'unité centrale
-('Entree_Production', 8, NULL, 1500), -- Monstera à l'unité centrale
-('Entree_Production', 9, NULL, 1500), -- Succulente à l'unité centrale
-('Entree_Production', 10, NULL, 1500), -- Bambou à l'unité centrale
-('Entree_Production', 11, NULL, 1000), -- Orangier à l'unité centrale
-('Entree_Production', 12, NULL, 1000), -- Tomate à l'unité centrale
-('Entree_Production', 13, NULL, 1000), -- Basilic à l'unité centrale
-('Entree_Production', 14, NULL, 1000), -- Menthe à l'unité centrale
-('Entree_Production', 15, NULL, 1000), -- Persil à l'unité centrale
-('Entree_Production', 16, NULL, 500),   -- Rose à l'unité centrale
-('Entree_Production', 17, NULL, 500),   -- Tulipe à l'unité centrale
-('Entree_Production', 18, NULL, 500),   -- Lys à l'unité centrale
-('Entree_Production', 19, NULL, 500),   -- Orchidée à l'unité centrale
-('Entree_Production', 20, NULL, 500);   -- Géranium
+INSERT INTO MvtStock (type_mouvement, idproduit, refptdevente, quantite) VALUES
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'CMP-001'), 'CTR-001', 1000), -- Compost (1kg) à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'CMP-002'), 'CTR-001', 1000),  -- Compost (5kg) à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'CMP-003'), 'CTR-001', 1000),  -- Compost (10kg) à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'CMP-004'), 'CTR-001', 1000),  -- Compost (50kg) à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'ENG-001'), 'CTR-001', 1000), -- Terre melangée à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTR-001'), 'CTR-001', 1500), -- Pin à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTR-002'), 'CTR-001', 1500), -- Ficus à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTR-003'), 'CTR-001', 1500), -- Monstera à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTR-004'), 'CTR-001', 1500), -- Succulente à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTR-005'), 'CTR-001', 1500), -- Bambou à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTP-001'), 'CTR-001', 1000), -- Orangier à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTP-002'), 'CTR-001', 1000), -- Tomate à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTP-003'), 'CTR-001', 1000), -- Basilic à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTP-004'), 'CTR-001', 1000), -- Menthe à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTP-005'), 'CTR-001', 1000), -- Persil à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTF-001'), 'CTR-001', 500),   -- Rose à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTF-002'), 'CTR-001', 500),   -- Tulipe à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTF-003'), 'CTR-001', 500),   -- Lys à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTF-004'), 'CTR-001', 500),   -- Orchidée à l'unité centrale
+('Entree_Production', (SELECT id FROM Produit WHERE matricule = 'PLTF-005'), 'CTR-001', 500);   -- Géranium
 
 /* Données de mouvement de stock pour les kiosques pour BTQ-001 */
-INSERT INTO MvtStock (type_mouvement, idproduit, idptdevente, quantite) VALUES
-('Sortie_Transfert', 1, NULL, 200), -- Transfert de Compost (1kg) vers Boutique Centrale
-('Sortie_Transfert', 2, NULL, 20),  -- Transfert de Compost (5kg) vers Boutique Centrale
-('Sortie_Transfert', 3, NULL, 60),  -- Transfert de Compost (10kg) vers Boutique Centrale
-('Sortie_Transfert', 4, NULL, 40),  -- Transfert de Compost (50kg) vers Boutique Centrale
-('Sortie_Transfert', 5, NULL, 40), -- Transfert de Terre melangée vers Boutique Centrale
-('Sortie_Transfert', 6, NULL, 30), -- Transfert de Pin vers Boutique
-('Entree_Boutique', 1, 1, 200), -- Réception de Pin à la Boutique
-('Entree_Boutique', 2, 1, 20), -- Réception de Ficus à la Boutique
-('Entree_Boutique', 3, 1, 60), -- Réception de Monstera à la Boutique
-('Entree_Boutique', 4, 1, 40), -- Réception de Succulente à la Boutique
-('Entree_Boutique', 5, 1, 40); -- Réception de Bambou à la Boutique
-('Entree_Boutique', 6, 1, 30); -- Réception de Orangier à la Boutique
+INSERT INTO MvtStock (type_mouvement, idproduit, refptdevente, quantite) VALUES
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-001'), 'CTR-001', 200), -- Transfert de Compost (1kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-002'), 'CTR-001', 20),  -- Transfert de Compost (5kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-003'), 'CTR-001', 60),  -- Transfert de Compost (10kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-004'), 'CTR-001', 40),  -- Transfert de Compost (50kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-005'), 'CTR-001', 40), -- Transfert de Terre melangée vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-006'), 'CTR-001', 30), -- Transfert de Pin vers Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-001'), 'BTQ-001', 200), -- Réception de Pin à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-002'), 'BTQ-001', 20), -- Réception de Ficus à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-003'), 'BTQ-001', 60), -- Réception de Monstera à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-004'), 'BTQ-001', 40), -- Réception de Succulente à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-005'), 'BTQ-001', 40), -- Réception de Bambou à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTP-004'), 'BTQ-001', 30); -- Réception de Orangier à la Boutique
 
 /* Données de mouvement de stock pour les kiosques pour BTQ-002 */
-INSERT INTO MvtStock (type_mouvement, idproduit, idptdevente, quantite) VALUES
-('Sortie_Transfert', 1, NULL, 150), -- Transfert de Compost (1kg) vers Boutique Centrale
-('Sortie_Transfert', 2, NULL, 15),  -- Transfert de Compost (5kg) vers Boutique Centrale
-('Sortie_Transfert', 3, NULL, 45),  -- Transfert de Compost (10kg) vers Boutique Centrale
-('Sortie_Transfert', 4, NULL, 30),  -- Transfert de Compost (50kg) vers Boutique Centrale
-('Sortie_Transfert', 5, NULL, 30), -- Transfert de Terre melangée vers Boutique Centrale
-('Sortie_Transfert', 6, NULL, 20), -- Transfert de Pin vers Boutique
-('Entree_Boutique', 1, 2, 150), -- Réception de Pin à la Boutique
-('Entree_Boutique', 2, 2, 15), -- Réception de Ficus à la Boutique
-('Entree_Boutique', 3, 2, 45), -- Réception de Monstera à la Boutique
-('Entree_Boutique', 4, 2, 30), -- Réception de Succulente à la Boutique
-('Entree_Boutique', 5, 2, 30); -- Réception de Bambou à la Boutique
-('Entree_Boutique', 6, 2, 20); -- Réception de Orangier à la Boutique
+INSERT INTO MvtStock (type_mouvement, idproduit, refptdevente, quantite) VALUES
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-001'), 'CTR-001', 150), -- Transfert de Compost (1kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-002'), 'CTR-001', 15),  -- Transfert de Compost (5kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-003'), 'CTR-001', 45),  -- Transfert de Compost (10kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-004'), 'CTR-001', 30),  -- Transfert de Compost (50kg) vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-005'), 'CTR-001', 30), -- Transfert de Terre melangée vers Boutique Centrale
+('Sortie_Transfert', (SELECT id FROM Produit WHERE matricule = 'CMP-006'), 'CTR-001', 20), -- Transfert de Pin vers Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-001'), 'BTQ-002', 150), -- Réception de Pin à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-002'), 'BTQ-002', 15), -- Réception de Ficus à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-003'), 'BTQ-002', 45), -- Réception de Monstera à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-004'), 'BTQ-002', 30), -- Réception de Succulente à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTR-005'), 'BTQ-002', 30), -- Réception de Bambou à la Boutique
+('Entree_Boutique', (SELECT id FROM Produit WHERE matricule = 'PLTP-004'), 'BTQ-002', 150); -- Réception de Orangier à la Boutique
