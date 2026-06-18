@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 .env
+
+# Ignorer le fichier de configuration locale contenant les accès BDD
+src/main/resources/application.properties
