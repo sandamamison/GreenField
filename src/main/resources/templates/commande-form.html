@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nouvelle Commande – GreenField</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f4f0;
+            color: #1a2e1a;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            color: #2d6a2d;
+            letter-spacing: 1px;
+        }
+        header p { color: #5a7a5a; margin-top: .3rem; font-size: .9rem; }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.08);
+            padding: 1.8rem;
+            max-width: 720px;
+            margin: 0 auto 1.5rem;
+        }
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d6a2d;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 1.2rem;
+            padding-bottom: .5rem;
+            border-bottom: 2px solid #e0ece0;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-grid.full { grid-template-columns: 1fr; }
+
+        .field { display: flex; flex-direction: column; gap: .3rem; }
+        .field label { font-size: .82rem; font-weight: 600; color: #4a6a4a; }
+        .field input, .field select, .field textarea {
+            padding: .55rem .8rem;
+            border: 1.5px solid #cddccd;
+            border-radius: 7px;
+            font-size: .92rem;
+            transition: border-color .2s;
+            background: #fafcfa;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none;
+            border-color: #2d6a2d;
+            background: white;
+        }
+        .field.full { grid-column: 1 / -1; }
+
+        /* Radio cards mode réception */
+        .radio-group { display: flex; gap: .8rem; }
+        .radio-card {
+            flex: 1;
+            border: 2px solid #cddccd;
+            border-radius: 9px;
+            padding: .8rem 1rem;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .9rem;
+        }
+        .radio-card input[type=radio] { accent-color: #2d6a2d; width: 16px; height: 16px; }
+        .radio-card:has(input:checked) {
+            border-color: #2d6a2d;
+            background: #f0f9f0;
+        }
+
+        /* Lignes produits */
+        #lignes-container { display: flex; flex-direction: column; gap: .8rem; }
+        .ligne-produit {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: .7rem;
+            align-items: end;
+            background: #f6faf6;
+            border: 1.5px solid #ddeadd;
+            border-radius: 9px;
+            padding: .8rem 1rem;
+        }
+        .ligne-produit select { width: 100%; }
+        .ligne-produit input[type=number] { width: 80px; }
+        .btn-remove {
+            background: none;
+            border: 1.5px solid #e0a0a0;
+            color: #c0392b;
+            border-radius: 7px;
+            padding: .45rem .7rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: background .2s;
+        }
+        .btn-remove:hover { background: #fdf0f0; }
+
+        .btn-add {
+            margin-top: .5rem;
+            background: none;
+            border: 2px dashed #7ab87a;
+            color: #2d6a2d;
+            border-radius: 8px;
+            padding: .55rem 1rem;
+            cursor: pointer;
+            font-size: .88rem;
+            font-weight: 600;
+            width: 100%;
+            transition: background .2s;
+        }
+        .btn-add:hover { background: #f0f9f0; }
+
+        /* Résumé */
+        #resume {
+            background: #f0f9f0;
+            border: 1.5px solid #a8d5a8;
+            border-radius: 9px;
+            padding: 1rem 1.2rem;
+            font-size: .9rem;
+        }
+        #resume .ligne-resume {
+            display: flex;
+            justify-content: space-between;
+            padding: .25rem 0;
+            color: #3a5a3a;
+        }
+        #resume .ligne-resume.total {
+            border-top: 1.5px solid #a8d5a8;
+            margin-top: .4rem;
+            padding-top: .6rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1a3a1a;
+        }
+        #resume .gratuit { color: #27ae60; font-weight: 600; }
+
+        /* Bouton submit */
+        .btn-submit {
+            width: 100%;
+            padding: .9rem;
+            background: #2d6a2d;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: .5px;
+            transition: background .2s;
+            margin-top: .5rem;
+        }
+        .btn-submit:hover { background: #1e4e1e; }
+        .btn-submit:disabled { background: #8ab58a; cursor: not-allowed; }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 2rem; right: 2rem;
+            padding: .8rem 1.4rem;
+            border-radius: 9px;
+            font-size: .9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity .3s, transform .3s;
+            z-index: 100;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.success { background: #2d6a2d; color: white; }
+        #toast.error   { background: #c0392b; color: white; }
+
+        /* Sections conditionnelles */
+        #section-boutique, #section-livraison { display: none; }
+
+        @media (max-width: 560px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .radio-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🌿 GreenField</h1>
+    <p>Formulaire de test — Nouvelle commande</p>
+</header>
+
+<!-- ① Client -->
+<div class="card">
+    <h2>① Client</h2>
+    <div class="form-grid">
+        <div class="field">
+            <label for="clientId">ID Client</label>
+            <input type="number" id="clientId" placeholder="ex : 1" min="1"/>
+        </div>
+        <div class="field">
+            <label for="typePaiement">Mode de paiement</label>
+            <select id="typePaiement">
+                <option value="">-- Choisir --</option>
+                <option value="Espece">Espèce</option>
+                <option value="Mobile_Money">Mobile Money</option>
+                <option value="Carte_Fidelite">Carte Fidélité</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- ② Mode de réception -->
+<div class="card">
+    <h2>② Mode de réception</h2>
+    <div class="radio-group">
+        <label class="radio-card">
+            <input type="radio" name="modeReception" value="Retrait_Boutique" id="radioRetrait"/>
+            🏪 Retrait en boutique
+        </label>
+        <label class="radio-card">
+            <input type="radio" name="modeReception" value="Livraison_Domicile" id="radioLivraison"/>
+            🚚 Livraison à domicile
+        </label>
+    </div>
+
+    <!-- Retrait -->
+    <div id="section-boutique" style="margin-top:1rem;">
+        <div class="field">
+            <label for="pointDeVenteId">ID Point de vente</label>
+            <input type="number" id="pointDeVenteId" placeholder="ex : 1" min="1"/>
+        </div>
+    </div>
+
+    <!-- Livraison -->
+    <div id="section-livraison" style="margin-top:1rem;">
+        <div class="form-grid">
+            <div class="field full">
+                <label for="adresseLivraison">Adresse de livraison</label>
+                <input type="text" id="adresseLivraison" placeholder="ex : Lot II A 47, Antananarivo"/>
+            </div>
+            <div class="field full">
+                <label for="plageHoraire">Plage horaire souhaitée</label>
+                <input type="text" id="plageHoraire" placeholder="ex : 08h00 – 12h00"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ③ Produits -->
+<div class="card">
+    <h2>③ Produits</h2>
+    <div id="lignes-container">
+        <!-- ligne injectée par JS -->
+    </div>
+    <button class="btn-add" type="button" onclick="ajouterLigne()">+ Ajouter un produit</button>
+</div>
+
+<!-- ④ Résumé & envoi -->
+<div class="card">
+    <h2>④ Résumé</h2>
+    <div id="resume">
+        <div class="ligne-resume"><span>Total produits</span><span id="r-total-produits">0 Ar</span></div>
+        <div class="ligne-resume"><span>Frais de livraison</span><span id="r-frais">–</span></div>
+        <div class="ligne-resume total"><span>Total général</span><span id="r-total-general">–</span></div>
+    </div>
+    <button class="btn-submit" id="btnSubmit" onclick="soumettre()">Passer la commande</button>
+</div>
+
+<div id="toast"></div>
+
+<!-- Données injectées par Thymeleaf -->
+<script th:inline="javascript">
+    const PRODUITS  = /*[[${produits}]]*/  [];
+    const API_BASE  = /*[[${apiBase}]]*/   'http://localhost:8090';
+    const SEUIL_GRATUIT = 200000;
+    const FRAIS_STD     = 5000;
+</script>
+
+<script>
+    // ─── Affichage sections conditionnelles ───────────────────────────
+    document.querySelectorAll('input[name=modeReception]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            document.getElementById('section-boutique').style.display =
+                radio.value === 'Retrait_Boutique' ? 'block' : 'none';
+            document.getElementById('section-livraison').style.display =
+                radio.value === 'Livraison_Domicile' ? 'block' : 'none';
+            calculerResume();
+        });
+    });
+
+    // ─── Gestion des lignes produits ──────────────────────────────────
+    let ligneCount = 0;
+
+    function ajouterLigne() {
+        ligneCount++;
+        const id = `ligne-${ligneCount}`;
+        const options = PRODUITS.map(p =>
+            `<option value="${p.id}" data-pu="${p.pu}">${p.nom} — ${fmt(p.pu)} Ar</option>`
+        ).join('');
+
+        const div = document.createElement('div');
+        div.className = 'ligne-produit';
+        div.id = id;
+        div.innerHTML = `
+            <div class="field">
+                <label>Produit</label>
+                <select onchange="calculerResume()">
+                    <option value="">-- Choisir --</option>
+                    ${options}
+                </select>
+            </div>
+            <div class="field">
+                <label>Qté</label>
+                <input type="number" value="1" min="1" onchange="calculerResume()" oninput="calculerResume()"/>
+            </div>
+            <button class="btn-remove" onclick="supprimerLigne('${id}')" title="Retirer">✕</button>
+        `;
+        document.getElementById('lignes-container').appendChild(div);
+        calculerResume();
+    }
+
+    function supprimerLigne(id) {
+        document.getElementById(id)?.remove();
+        calculerResume();
+    }
+
+    // ─── Calcul résumé ────────────────────────────────────────────────
+    function calculerResume() {
+        let total = 0;
+        document.querySelectorAll('.ligne-produit').forEach(ligne => {
+            const sel = ligne.querySelector('select');
+            const qty = parseInt(ligne.querySelector('input[type=number]').value) || 0;
+            const opt = sel.options[sel.selectedIndex];
+            const pu  = opt ? parseFloat(opt.dataset.pu || 0) : 0;
+            total += pu * qty;
+        });
+
+        const mode = document.querySelector('input[name=modeReception]:checked')?.value;
+        let frais = 0;
+        let fraisLabel = '–';
+        let totalGeneral = total;
+
+        if (mode === 'Livraison_Domicile') {
+            frais = total >= SEUIL_GRATUIT ? 0 : FRAIS_STD;
+            fraisLabel = frais === 0
+                ? `<span class="gratuit">0 Ar ✓ (offert dès ${fmt(SEUIL_GRATUIT)} Ar)</span>`
+                : `${fmt(frais)} Ar`;
+            totalGeneral = total + frais;
+        } else if (mode === 'Retrait_Boutique') {
+            fraisLabel = 'N/A (retrait)';
+        }
+
+        document.getElementById('r-total-produits').textContent = fmt(total) + ' Ar';
+        document.getElementById('r-frais').innerHTML = fraisLabel;
+        document.getElementById('r-total-general').textContent =
+            mode ? fmt(totalGeneral) + ' Ar' : '–';
+    }
+
+    // ─── Soumission ───────────────────────────────────────────────────
+    async function soumettre() {
+        const btn = document.getElementById('btnSubmit');
+        const clientId     = parseInt(document.getElementById('clientId').value);
+        const typePaiement = document.getElementById('typePaiement').value;
+        const modeReception = document.querySelector('input[name=modeReception]:checked')?.value;
+
+        if (!clientId)      return toast('Veuillez saisir un ID client.', 'error');
+        if (!typePaiement)  return toast('Veuillez choisir un mode de paiement.', 'error');
+        if (!modeReception) return toast('Veuillez choisir un mode de réception.', 'error');
+
+        const lignes = [];
+        let valid = true;
+        document.querySelectorAll('.ligne-produit').forEach(ligne => {
+            const sel = ligne.querySelector('select');
+            const qty = parseInt(ligne.querySelector('input[type=number]').value);
+            if (!sel.value || !qty || qty < 1) { valid = false; return; }
+            lignes.push({ produitId: parseInt(sel.value), quantite: qty });
+        });
+
+        if (!valid || lignes.length === 0)
+            return toast('Ajoutez au moins un produit valide.', 'error');
+
+        const body = { clientId, typePaiement, modeReception, lignes };
+
+        if (modeReception === 'Retrait_Boutique') {
+            const pdvId = parseInt(document.getElementById('pointDeVenteId').value);
+            if (!pdvId) return toast('Veuillez saisir l\'ID du point de vente.', 'error');
+            body.pointDeVenteRetraitId = pdvId;
+        } else {
+            const adresse = document.getElementById('adresseLivraison').value.trim();
+            if (!adresse) return toast('Veuillez saisir une adresse de livraison.', 'error');
+            body.adresseLivraison = adresse;
+            body.plageHoraireSouhaitee = document.getElementById('plageHoraire').value.trim();
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Envoi…';
+
+        try {
+            const res = await fetch(`${API_BASE}/api/commandes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                toast(`✅ Commande #${data.id} créée — Total : ${fmt(data.totalGeneral)} Ar`, 'success');
+            } else {
+                toast('❌ ' + (typeof data === 'string' ? data : JSON.stringify(data)), 'error');
+            }
+        } catch (e) {
+            toast('❌ Erreur réseau : ' + e.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Passer la commande';
+        }
+    }
+
+    // ─── Utilitaires ──────────────────────────────────────────────────
+    function fmt(n) {
+        return Number(n).toLocaleString('fr-FR');
+    }
+
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = `show ${type}`;
+        clearTimeout(el._t);
+        el._t = setTimeout(() => { el.className = ''; }, 4000);
+    }
+
+    // Ligne initiale au chargement
+    ajouterLigne();
+</script>
+
+</body>
+</html>
