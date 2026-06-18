@@ -19,6 +19,9 @@ public class PointDeVente {
     @Column(nullable = false, length = 50)
     private String contact;
 
+    @Column(nullable = false, unique = true, length = 50)
+    private String reference; // Nouvelle colonne pour différencier les points de vente
+
     public Integer getId() {
         return id;
     }
@@ -49,6 +52,14 @@ public class PointDeVente {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
 }
