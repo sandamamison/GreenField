@@ -1,6 +1,6 @@
 -- Active: 1780380832087@@127.0.0.1@5432@bdctrlETU004353
 CREATE DATABASE greenfield;
-
+\c greenfield;
 -- =====================================================================
 -- 1. STRUCTURES DE BASE & SÉCURITÉ
 -- =====================================================================
@@ -199,5 +199,5 @@ CREATE TABLE Tresorerie (
     montant DECIMAL(10, 2) NOT NULL,
     date_operation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description TEXT, -- Saisie manuelle pour les dépenses d'exploitation
-    idcommande INT REFERENCES Commandes(id) -- Lié automatiquement si c'est une vente
+    idcommande INT REFERENCES Commandes(id) 
 );

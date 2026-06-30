@@ -1,0 +1,5 @@
+http://localhost:8090/commandes/new
+
+
+http://localhost:8090/api/commandes
+http://localhost:8090/api/employees
